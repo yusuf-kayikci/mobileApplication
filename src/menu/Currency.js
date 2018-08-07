@@ -32,6 +32,7 @@ var CurrencyNavigator = createMaterialTopTabNavigator({
     swipeEnabled : true,  
     tabBarPosition : 'bottom',
     tabBarOptions : {
+      activeTintColor : 'yellow'
     }
   
   })

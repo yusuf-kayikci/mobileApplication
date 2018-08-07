@@ -30,6 +30,7 @@ var MainScreenNavigator = createMaterialTopTabNavigator({
   swipeEnabled : true,
   tabBarPosition : 'top',
   tabBarOptions : {
+    activeTintColor : 'yellow',
     style : {
       ...Platform.select({
         ios: {
