@@ -1,21 +1,20 @@
 import React from 'react';
-import { Text,View,StyleSheet,ListView } from 'react-native'
+import { Text,View,StyleSheet,ScrollView } from 'react-native'
+
+import { Table, Row, Rows } from 'react-native-table-component';
 
 
 
-var CurrencyModel = [{
-    "Name" : null,
-    "Buying" : null,
-    "Selling" : null
-}];
+
+
+var CurrencyModel =[];
 
 
 export default class CurrencyPricesTab extends React.Component{
-    constructor(){
-        super();
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    constructor(props){
+        super(props);
         this.state = {
-          dataSource: ds.cloneWithRows(['row 1', 'row 2']),
+            CurrencyData : []
         };
     }
 
@@ -29,14 +28,16 @@ export default class CurrencyPricesTab extends React.Component{
 
             CurrencyModel.pop();
             for(var i = 0;i < xml.getElementsByTagName('CurrencyName').length;i++){
-                CurrencyModel.push(
-                    {
-                        "Name" : xml.getElementsByTagName('CurrencyName')[i].value,
-                        "Buying" : xml.getElementsByTagName('ForexBuying')[i].value,
-                        "Selling" : xml.getElementsByTagName('ForexSelling')[i].value
-                    })                
+                var CurrencyItem = [];
+                CurrencyItem.push(xml.getElementsByTagName('Isim')[i].value);
+                CurrencyItem.push(xml.getElementsByTagName('ForexBuying')[i].value);
+                CurrencyItem.push(xml.getElementsByTagName('ForexSelling')[i].value);
+                CurrencyModel.push(CurrencyItem);
             }
             console.log(CurrencyModel);
+            this.setState({
+                CurrencyData : CurrencyModel
+            })
 
         }).catch((err) => {
             console.log('fetch', err)
@@ -52,10 +53,12 @@ export default class CurrencyPricesTab extends React.Component{
 
     render(){
         return(
-            <ListView
-            dataSource={this.state.dataSource}
-            renderRow={(CurrencyModel) => <Text>{CurrencyModel["Name"]}</Text>}
-          />
+        <ScrollView style={style.container}>
+            <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
+              <Row data={['Name','Buying','Selling']} style={table_style.head} textStyle={table_style.text}/>
+              <Rows data={this.state.CurrencyData} textStyle={table_style.text}/>
+            </Table>
+        </ScrollView>
 
         );
     }
@@ -68,5 +71,16 @@ var style = StyleSheet.create({
     },
     TextStle:{
         fontSize : 20
-    }
+    },
+    container: { 
+        flex: 1,
+        marginTop : 20
+        
+    },
+})
+
+
+var table_style = StyleSheet.create({
+        head: { height: 40, backgroundColor: '#f1f8ff' },
+        text: { margin: 6 }
 })
