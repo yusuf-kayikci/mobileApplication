@@ -1,13 +1,26 @@
 import React from 'react';
 import { Text,View,StyleSheet } from 'react-native'
 
+
+
 export default class GoldPricesTab extends React.Component{
+
+
+
+
+
+
+    componentWillMount(){
+        
+    }
+
     render(){
+
         return(
+            
             <View style = {style.PageStyle}>
                 <Text style = {style.TextStle} > Gold Prices List</Text>
             </View>
-
         );
     }
 }

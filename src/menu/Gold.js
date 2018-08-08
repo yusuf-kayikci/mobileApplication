@@ -33,7 +33,8 @@ var GoldNavigator = createMaterialTopTabNavigator({
     swipeEnabled : true,  
     tabBarPosition : 'bottom',
     tabBarOptions : {
-        activeTintColor : 'yellow'
+        activeTintColor : 'yellow',
+        
     }
   
   })
@@ -42,7 +43,6 @@ export default class GoldMenu extends React.Component{
     render(){
         return(
             <GoldNavigator style = {style.PageStyle}/>
-
         );
     }
 }
