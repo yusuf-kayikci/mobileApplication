@@ -7,6 +7,7 @@ export default class GoldPricesTab extends React.Component{
     constructor(props){
         super(props);
         this.state = {
+            refreshing : false,
             GoldData : []
         }
     }
