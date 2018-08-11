@@ -11,18 +11,18 @@ import {createMaterialTopTabNavigator} from 'react-navigation'
 
 
 var GoldNavigator = createMaterialTopTabNavigator({
-    Prices : { 
-      screen : GoldPrcesTab,
-      navigationOptions:{
-        tabBarLabel : 'Prices'
-      }
-    },
     Simulator : { 
       screen : GoldSimulatorTab,
       navigationOptions:{
         tabBarLabel : 'Simulator'  
       }
     },
+    Prices : { 
+        screen : GoldPrcesTab,
+        navigationOptions:{
+          tabBarLabel : 'Prices'
+        }
+      },
     MyCurrency : { 
         screen : MyGoldTab,
         navigationOptions:{

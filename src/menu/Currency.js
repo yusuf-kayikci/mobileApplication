@@ -10,16 +10,16 @@ import {createMaterialTopTabNavigator} from 'react-navigation'
 
 
 var CurrencyNavigator = createMaterialTopTabNavigator({
-    Prices : { 
-      screen : CurrencyPricesTab,
-      navigationOptions:{
-        tabBarLabel : 'Prices'
-      }
-    },
     Simulator : { 
       screen : CurrencySimulatorTab,
       navigationOptions:{
         tabBarLabel : 'Simulator'  
+      }
+    },
+    Prices : { 
+      screen : CurrencyPricesTab,
+      navigationOptions:{
+        tabBarLabel : 'Prices'
       }
     },
     MyCurrency : { 

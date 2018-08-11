@@ -1,8 +1,8 @@
 import React from 'react';
-import { Text,View,StyleSheet,ScrollView } from 'react-native'
+import { Text,View,StyleSheet,ScrollView,RefreshControl } from 'react-native'
 
 import { Table, Row, Rows } from 'react-native-table-component';
-
+import { resolve } from 'url';
 
 
 
@@ -14,34 +14,36 @@ export default class CurrencyPricesTab extends React.Component{
     constructor(props){
         super(props);
         this.state = {
+            refreshing : false,
             CurrencyData : []
         };
     }
 
 
-    getData(){
-        fetch('http://www.tcmb.gov.tr/kurlar/today.xml')
-        .then(response => response.text())
-        .then((response) => {
-            var XMLParser = require('react-xml-parser');
-            var xml = new XMLParser().parseFromString(response);    // Assume xmlText contains the example XML
-
-            CurrencyModel.pop();
-            for(var i = 0;i < xml.getElementsByTagName('CurrencyName').length;i++){
-                var CurrencyItem = [];
-                CurrencyItem.push(xml.getElementsByTagName('Isim')[i].value);
-                CurrencyItem.push(xml.getElementsByTagName('ForexBuying')[i].value);
-                CurrencyItem.push(xml.getElementsByTagName('ForexSelling')[i].value);
-                CurrencyModel.push(CurrencyItem);
-            }
-            console.log(CurrencyModel);
-            this.setState({
-                CurrencyData : CurrencyModel
+    getData(){  
+        return new Promise((resolve,reject)=>{
+            fetch('https://www.doviz.com/api/v1/currencies/all/latest')
+            .then(response => response.json())
+            .then((response) => {
+                CurrencyModel = [];
+                for(var i = 0;i < 14;i++){
+                    var CurrencyItem = [];
+                    CurrencyItem.push(response[i]['full_name']);
+                    CurrencyItem.push(response[i]['buying'].toFixed(3));
+                    CurrencyItem.push(response[i]['selling'].toFixed(3));
+                    CurrencyModel.push(CurrencyItem);
+                }            
+                this.setState({
+                    CurrencyData : CurrencyModel
+                })
+                resolve();    
+                console.log(CurrencyModel);            
+            }).catch((err) => {
+                reject(err);
+                console.log('fetch', err)
             })
-
-        }).catch((err) => {
-            console.log('fetch', err)
         })
+
     }
 
 
@@ -49,21 +51,43 @@ export default class CurrencyPricesTab extends React.Component{
         this.getData();
     }
 
+    _onRefresh = () => {
+        this.setState({refreshing : true})
+        this.getData().then(()=>{
+            this.setState({
+                refreshing : false
+            })
+        }).catch(err=> {
+            coonsole.log(err);
+        }) 
+      }
 
 
-    render(){
+    _refreshControl(){
+      return (
+        <RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={this._onRefresh}/>
+      )
+    }
+    renderTable(){
         return(
-        <ScrollView style={style.container}>
             <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
               <Row data={['Name','Buying','Selling']} style={table_style.head} textStyle={table_style.text}/>
               <Rows data={this.state.CurrencyData} textStyle={table_style.text}/>
             </Table>
+        );
+    }
+
+    render(){
+        return(
+        <ScrollView style={style.container} refreshControl = {this._refreshControl()}>
+            {this.renderTable()}
         </ScrollView>
 
         );
     }
 }
-
 
 var style = StyleSheet.create({
     PageStyle:{
@@ -84,3 +108,5 @@ var table_style = StyleSheet.create({
         head: { height: 40, backgroundColor: '#f1f8ff' },
         text: { margin: 6 }
 })
+
+

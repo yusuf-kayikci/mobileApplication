@@ -14,16 +14,16 @@ import {Platform, StyleSheet} from 'react-native';
 
 
 var MainScreenNavigator = createMaterialTopTabNavigator({
-  Gold : { 
-    screen : GoldMenu,
-    navigationOptions:{
-      tabBarLabel : 'Gold'
-    }
-  },
   Currency : { 
     screen : CurrencyMenu,
     navigationOptions:{
       tabBarLabel : 'Currency'  
+    }
+  },
+  Gold : { 
+    screen : GoldMenu,
+    navigationOptions:{
+      tabBarLabel : 'Gold'
     }
   }
 },{
